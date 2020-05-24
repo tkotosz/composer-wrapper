@@ -62,6 +62,36 @@ class FileContent
         return self::fromString('{}');
     }
 
+    public function repositories(): array
+    {
+        return $this->repositories;
+    }
+
+    public function minimumStability(): string
+    {
+        return $this->minimumStability;
+    }
+
+    public function preferStable(): bool
+    {
+        return $this->preferStable;
+    }
+
+    public function config(): array
+    {
+        return $this->config;
+    }
+
+    public function require(): array
+    {
+        return $this->require;
+    }
+
+    public function provide(): array
+    {
+        return $this->provide;
+    }
+
     public function withVendorDir(string $vendorDir): FileContent
     {
         $newConfig = self::fromArray($this->toArray());
