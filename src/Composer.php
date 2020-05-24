@@ -7,9 +7,12 @@ use Composer\Installer;
 use Composer\IO\ConsoleIO;
 use Composer\IO\NullIO;
 use Composer\Package\PackageInterface;
+use Composer\Package\Version\VersionSelector;
 use Composer\Repository\CompositeRepository;
 use Composer\Repository\PlatformRepository;
+use Composer\Repository\RepositoryFactory;
 use Composer\Repository\RepositoryInterface;
+use Composer\Repository\RepositorySet;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -83,8 +86,7 @@ class Composer
 
     public function installPackage(string $package, string $version = null): int
     {
-        // TODO find best version
-        $version = $version ?? '*';
+        $version = $version ?? $this->findBestVersion($package) ?? '*';
 
         return $this->changeComposerConfig(
             FileContent::fromString(file_get_contents($this->filePath))->addPackage($package, $version)
@@ -145,5 +147,20 @@ class Composer
         $customComposer = Factory::create($composerIo, $this->filePath, true);
 
         return Installer::create($composerIo, $customComposer);
+    }
+
+    private function findBestVersion(string $package): ?string
+    {
+        $customComposer = Factory::create(new NullIO(), $this->filePath, true);
+        $repositorySet = new RepositorySet('dev');
+        $repositorySet->addRepository(new CompositeRepository($customComposer->getRepositoryManager()->getRepositories()));
+        $versionSelector = new VersionSelector($repositorySet);
+        $package = $versionSelector->findBestCandidate($package);
+
+        if (is_bool($package)) {
+            return null;
+        }
+
+        return $versionSelector->findRecommendedRequireVersion($package);
     }
 }
