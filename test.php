@@ -100,3 +100,16 @@ foreach ($result as $package) {
 }
 
 echo PHP_EOL;
+
+$result = $composer->changeComposerConfig(
+    $composer->getComposerConfig()->addRepository('foo', 'vcs', 'https://github.com/tkotosz/fooapp.git')
+);
+
+if ($result === 0) {
+    echo "Custom composer repository (foo) add success" . PHP_EOL;
+    echo file_get_contents('test.json') . PHP_EOL;
+} else {
+    echo "Custom composer repository (foo) add failed" . PHP_EOL;
+}
+
+echo PHP_EOL;

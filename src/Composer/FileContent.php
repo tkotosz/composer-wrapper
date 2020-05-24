@@ -71,11 +71,11 @@ class FileContent
         return $newConfig;
     }
 
-    public function addRepository(string $type, string $url): FileContent
+    public function addRepository(string $name, string $type, string $url): FileContent
     {
         $newConfig = self::fromArray($this->toArray());
 
-        $newConfig->repositories[] = [
+        $newConfig->repositories[$name] = [
             'type' => $type,
             'url' => $url
         ];
