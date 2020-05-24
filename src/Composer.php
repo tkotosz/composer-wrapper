@@ -161,6 +161,13 @@ class Composer
             return null;
         }
 
-        return $versionSelector->findRecommendedRequireVersion($package);
+        $version = $versionSelector->findRecommendedRequireVersion($package);
+
+        // composer returns silly things
+        if ($version === '9999999-dev') {
+            return 'dev-master';
+        }
+
+        return $version;
     }
 }
