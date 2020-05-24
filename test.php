@@ -113,3 +113,16 @@ if ($result === 0) {
 }
 
 echo PHP_EOL;
+
+$result = $composer->changeComposerConfig(
+    $composer->getComposerConfig()->removeRepository('foo')
+);
+
+if ($result === 0) {
+    echo "Custom composer repository (foo) remove success" . PHP_EOL;
+    echo file_get_contents('test.json') . PHP_EOL;
+} else {
+    echo "Custom composer repository (foo) remove failed" . PHP_EOL;
+}
+
+echo PHP_EOL;

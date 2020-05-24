@@ -113,6 +113,15 @@ class FileContent
         return $newConfig;
     }
 
+    public function removeRepository(string $name): FileContent
+    {
+        $newConfig = self::fromArray($this->toArray());
+
+        unset($newConfig->repositories[$name]);
+
+        return $newConfig;
+    }
+
     public function addProvide(string $package, string $version): FileContent
     {
         $newConfig = self::fromArray($this->toArray());
