@@ -126,9 +126,17 @@ class Composer
 
     public function findInstalledPackages(): Packages
     {
+        $packages = [];
         $customComposer = Factory::create(new NullIO(), $this->filePath, true);
+        $composerPackages = $customComposer->getRepositoryManager()->getLocalRepository()->getPackages();
 
-        return Packages::fromItems($customComposer->getRepositoryManager()->getLocalRepository()->getPackages());
+        // filter duplicates (for some reason atm all dev-master package returned twice
+        // with version "dev-master" and with version "9999999-dev"
+        foreach ($composerPackages as $composerPackage) {
+            $packages[$composerPackage->getName()] = $composerPackage;
+        }
+
+        return Packages::fromItems(array_values($packages));
     }
 
     private function installer(): Installer
