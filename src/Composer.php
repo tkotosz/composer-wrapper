@@ -126,6 +126,13 @@ class Composer
         return Packages::fromItems($packages);
     }
 
+    public function findPackageByName(string $package): ?PackageInterface
+    {
+        $customComposer = Factory::create(new NullIO(), $this->filePath, true);
+
+        return $customComposer->getRepositoryManager()->findPackage($package, '*');
+    }
+
     public function findInstalledPackages(): Packages
     {
         $packages = [];
