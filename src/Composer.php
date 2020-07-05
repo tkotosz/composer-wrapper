@@ -75,7 +75,7 @@ class Composer
 
         if ($result !== 0) {
             if ($originalFileContent !== null) {
-                $this->filesystem->dumpFile($this->filePath, $fileContent->toString());
+                $this->filesystem->dumpFile($this->filePath, $originalFileContent->toString());
             } else {
                 $this->filesystem->remove($this->filePath);
             }
